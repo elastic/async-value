@@ -25,4 +25,8 @@ module.exports = class AsyncValue {
     this.callbacks = null
     this.value = value
   }
+
+  send(target) {
+    this.get(value => target.set(value))
+  }
 }

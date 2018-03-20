@@ -59,3 +59,16 @@ tap.test('throw on multiple calls to set', t => {
   t.throws(() => value.set('second'))
   t.end()
 })
+
+tap.test('send', t => {
+  var a = new AsyncValue()
+  var b = new AsyncValue()
+
+  b.get(value => {
+    t.equal(value, 'hello')
+    t.end()
+  })
+
+  a.set('hello')
+  a.send(b)
+})
