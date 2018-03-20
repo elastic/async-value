@@ -9,7 +9,7 @@ module.exports = class AsyncValue {
   }
 
   get(callback) {
-    assert(typeof callback === 'function', 'slot callback must be a function')
+    assert(typeof callback === 'function', 'callback must be a function')
     if (typeof this.value !== 'undefined') {
       callback(this.value)
     } else {
@@ -18,7 +18,7 @@ module.exports = class AsyncValue {
   }
 
   set(value) {
-    assert(typeof this.value === 'undefined', 'slot value can only be set once')
+    assert(typeof this.value === 'undefined', 'value can only be set once')
     if (value instanceof AsyncValue) {
       value.send(this)
       return
@@ -31,6 +31,7 @@ module.exports = class AsyncValue {
   }
 
   send(target) {
-    this.get(value => target.set(value))
+    assert(target instanceof AsyncValue, 'send target must be an async value')
+    this.get(target.set.bind(target))
   }
 }

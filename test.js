@@ -48,7 +48,9 @@ tap.test('throw on non-function arguments to get', t => {
     []
   ]
   types.forEach(type => {
-    t.throws(() => value.get(type))
+    t.throws(() => value.get(type), {
+      message: 'callback must be a function'
+    })
   })
   t.end()
 })
@@ -56,7 +58,9 @@ tap.test('throw on non-function arguments to get', t => {
 tap.test('throw on multiple calls to set', t => {
   var value = new AsyncValue()
   value.set('first')
-  t.throws(() => value.set('second'))
+  t.throws(() => value.set('second'), {
+    message: 'value can only be set once'
+  })
   t.end()
 })
 
@@ -84,4 +88,24 @@ tap.test('set sends async values', t => {
 
   a.set('hello')
   b.set(a)
+})
+
+tap.test('throw on send to non-async-value', t => {
+  var value = new AsyncValue()
+  var types = [
+    1,
+    null,
+    undefined,
+    () => {},
+    'string',
+    /regex/,
+    {},
+    []
+  ]
+  types.forEach(type => {
+    t.throws(() => value.send(type), {
+      message: 'send target must be an async value'
+    })
+  })
+  t.end()
 })
