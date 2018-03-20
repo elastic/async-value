@@ -4,13 +4,16 @@ const assert = require('assert')
 
 module.exports = class AsyncValue {
   constructor(value) {
-    this.value = value
+    this.value = null
     this.callbacks = []
+    if (value !== null && value !== undefined) {
+      this.set(value)
+    }
   }
 
   get(callback) {
     assert(typeof callback === 'function', 'callback must be a function')
-    if (typeof this.value !== 'undefined') {
+    if (this.value !== null) {
       callback(this.value)
     } else {
       this.callbacks.push(callback)
@@ -18,7 +21,7 @@ module.exports = class AsyncValue {
   }
 
   set(value) {
-    assert(typeof this.value === 'undefined', 'value can only be set once')
+    assert(this.value === null, 'value can only be set once')
     if (value instanceof AsyncValue) {
       value.send(this)
       return
