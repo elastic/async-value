@@ -19,6 +19,10 @@ module.exports = class AsyncValue {
 
   set(value) {
     assert(typeof this.value === 'undefined', 'slot value can only be set once')
+    if (value instanceof AsyncValue) {
+      value.send(this)
+      return
+    }
     for (let callback of this.callbacks) {
       callback(value)
     }

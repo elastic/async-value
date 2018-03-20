@@ -72,3 +72,16 @@ tap.test('send', t => {
   a.set('hello')
   a.send(b)
 })
+
+tap.test('set sends async values', t => {
+  var a = new AsyncValue()
+  var b = new AsyncValue()
+
+  b.get(value => {
+    t.equal(value, 'hello')
+    t.end()
+  })
+
+  a.set('hello')
+  b.set(a)
+})
